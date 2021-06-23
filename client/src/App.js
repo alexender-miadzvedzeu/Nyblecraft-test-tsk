@@ -1,23 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
+import InputForm from "./components/InputForm/InputForm";
+import TagConteiner from "./components/TagConteiner/TagConteiner";
+import TaksConteiner from "./components/TaksConteiner/TaksConteiner";
+import { useEffect, useState } from 'react';
 
 function App() {
+
+  const [task, setTask] = useState([]);
+
+  useEffect(async () => {
+    await fetch('http://localhost:7777/tasks')
+    .then(res => res.json())
+    .then(data => setTask(data))
+  }, [])
+
+  const sendTask = async newTask => {
+    await fetch('http://localhost:7777/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({task: newTask})
+    })
+    setTask([...task, {task: newTask}])
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <InputForm sendTask={sendTask} />
+      <TagConteiner task={task} />
+      <TaksConteiner task={task} />
     </div>
   );
 }
