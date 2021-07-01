@@ -30,9 +30,8 @@ module.exports = app => {
             fs.readFile('DB.json', (err, data) => {
                 if (err) throw err;
                 currentTasks = JSON.parse(data);
-                const newTaks = {"id": create_ID(), "task": content.task}
+                const newTaks = {"id": create_ID(), "task": content.task, "tags": content.tags}
                 currentTasks.push(newTaks);
-                console.log(currentTasks)
                 fs.writeFile('DB.json', JSON.stringify(currentTasks), 'utf8', err => {
                     if (err) throw err;
                     responce.sendStatus(200);

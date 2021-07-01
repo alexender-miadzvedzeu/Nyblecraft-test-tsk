@@ -5,7 +5,7 @@ import Taks from './Task/Taks';
 const TaksConteiner = props => {
     return (
         <div className={classes.wrapper}>
-            {props.task.map((task, key) => <Taks task={task} key={key} />)}
+            {props.task.map((task, key) => <Taks findTags={props.findTags} task={task} key={key} />)}
         </div>
     )
 }
