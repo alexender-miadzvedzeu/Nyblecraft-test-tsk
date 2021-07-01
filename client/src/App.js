@@ -10,7 +10,12 @@ function App() {
   const [task, setTask] = useState([]);
   const [tags, setTags] = useState([]);
 
-  useEffect(async () => {
+  useEffect( () => {
+    getTasks();
+  }, [])
+  
+  
+  const getTasks = async () => {
     let newTagks = [...tags];
     await fetch('http://localhost:7777/tasks')
     .then(res => res.json())
@@ -21,9 +26,7 @@ function App() {
       });
     })
     setTags(newTagks);
-  }, [])
-  
-  const findTags = string => string.split(' ').filter(item => item.startsWith('#'));
+  }
 
   const sendTask = async newTask => {
     await fetch('http://localhost:7777/tasks', {
@@ -38,12 +41,24 @@ function App() {
       setTags([...tags, ...findTags(newTask)]);
     }
   }
+
+  const removeTask = async id =>  {
+    await fetch('http://localhost:7777/tasks', {
+        method: 'delete',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id: id})
+    });
+}
+
+  const findTags = string => string.split(' ').filter(item => item.startsWith('#'));
   
   return (
     <div className="App">
       <TagConteiner tags={tags} />
       <InputForm sendTask={sendTask} />
-      <TaksConteiner findTags={findTags} task={task} />
+      <TaksConteiner removeTask={removeTask} task={task} />
     </div>
   );
 }
